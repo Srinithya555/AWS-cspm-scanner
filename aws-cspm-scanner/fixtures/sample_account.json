@@ -1,0 +1,131 @@
+{
+  "iam_policies": [
+    {
+      "policy_name": "LegacyFullAdminPolicy",
+      "attached_to": ["deploy-bot"],
+      "statements": [
+        {"effect": "Allow", "action": "*", "resource": "*"}
+      ]
+    },
+    {
+      "policy_name": "S3WildcardActions",
+      "attached_to": ["data-pipeline-role"],
+      "statements": [
+        {"effect": "Allow", "action": "*", "resource": ["arn:aws:s3:::data-bucket/*"]}
+      ]
+    },
+    {
+      "policy_name": "ScopedReadOnlyPolicy",
+      "attached_to": ["analyst-role"],
+      "statements": [
+        {"effect": "Allow", "action": ["s3:GetObject", "s3:ListBucket"], "resource": ["arn:aws:s3:::reports-bucket/*"]}
+      ]
+    }
+  ],
+  "iam_users": [
+    {
+      "username": "root",
+      "is_root": true,
+      "has_console_password": true,
+      "mfa_enabled": false,
+      "access_keys": [
+        {"key_id": "AKIAROOTKEYEXAMPLE1", "age_days": 400, "last_used_days_ago": 5}
+      ]
+    },
+    {
+      "username": "alice",
+      "is_root": false,
+      "has_console_password": true,
+      "mfa_enabled": true,
+      "access_keys": [
+        {"key_id": "AKIAALICEKEYEXAMPLE", "age_days": 30, "last_used_days_ago": 1}
+      ]
+    },
+    {
+      "username": "deploy-bot",
+      "is_root": false,
+      "has_console_password": false,
+      "mfa_enabled": false,
+      "access_keys": [
+        {"key_id": "AKIADEPLOYKEYEXAMPLE", "age_days": 210, "last_used_days_ago": 2}
+      ]
+    },
+    {
+      "username": "contractor-bob",
+      "is_root": false,
+      "has_console_password": true,
+      "mfa_enabled": false,
+      "access_keys": [
+        {"key_id": "AKIABOBKEYEXAMPLE111", "age_days": 15, "last_used_days_ago": 180}
+      ]
+    }
+  ],
+  "s3_buckets": [
+    {
+      "name": "public-website-assets",
+      "block_public_acls": false,
+      "block_public_policy": false,
+      "ignore_public_acls": false,
+      "restrict_public_buckets": false,
+      "acl_grants_all_users": true,
+      "acl_grants_authenticated_users": false,
+      "default_encryption_enabled": false,
+      "versioning_enabled": false,
+      "access_logging_enabled": false
+    },
+    {
+      "name": "internal-reports",
+      "block_public_acls": true,
+      "block_public_policy": true,
+      "ignore_public_acls": true,
+      "restrict_public_buckets": true,
+      "acl_grants_all_users": false,
+      "acl_grants_authenticated_users": false,
+      "default_encryption_enabled": true,
+      "versioning_enabled": true,
+      "access_logging_enabled": true
+    },
+    {
+      "name": "backup-archive",
+      "block_public_acls": true,
+      "block_public_policy": true,
+      "ignore_public_acls": true,
+      "restrict_public_buckets": true,
+      "acl_grants_all_users": false,
+      "acl_grants_authenticated_users": false,
+      "default_encryption_enabled": true,
+      "versioning_enabled": false,
+      "access_logging_enabled": false
+    }
+  ],
+  "security_groups": [
+    {
+      "group_id": "sg-0abc111ssh",
+      "group_name": "legacy-bastion",
+      "ip_permissions": [
+        {"ip_protocol": "tcp", "from_port": 22, "to_port": 22, "cidr_ranges": ["0.0.0.0/0"], "ipv6_cidr_ranges": []}
+      ]
+    },
+    {
+      "group_id": "sg-0def222db",
+      "group_name": "database-tier",
+      "ip_permissions": [
+        {"ip_protocol": "tcp", "from_port": 5432, "to_port": 5432, "cidr_ranges": ["0.0.0.0/0"], "ipv6_cidr_ranges": []}
+      ]
+    },
+    {
+      "group_id": "sg-0ghi333all",
+      "group_name": "misconfigured-catchall",
+      "ip_permissions": [
+        {"ip_protocol": "-1", "from_port": null, "to_port": null, "cidr_ranges": ["0.0.0.0/0"], "ipv6_cidr_ranges": []}
+      ]
+    },
+    {
+      "group_id": "sg-0jkl444app",
+      "group_name": "app-tier-correct",
+      "ip_permissions": [
+        {"ip_protocol": "tcp", "from_port": 443, "to_port": 443, "cidr_ranges": ["10.0.0.0/16"], "ipv6_cidr_ranges": []}
+      ]
+    }
+  ]
+}
